@@ -1,4 +1,15 @@
 #include <stdio.h>
+
+typedef int bool;
+	#define true 1
+	#define false 0
+
+struct Node {
+	char name[50];
+	float weight;
+	bool searched;
+	struct Node* next;
+};
  
 int main(int argc, char *argv[])
 {
