@@ -19,9 +19,6 @@ int main(int argc, char *argv[])
 	char* numtrials = argv[3];
 	char* dimensions = argv[4];
 	
-	peanut butter jelly time
-	
-	What is up Will?
 
 	struct Node* array;
 
