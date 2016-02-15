@@ -1,11 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 typedef int bool;
 	#define true 1
 	#define false 0
 
-struct Node {
-	char name[50];
+struct node {
+	int name;
 	float weight;
 	bool searched;
 	struct Node* next;
@@ -15,19 +17,23 @@ int main(int argc, char *argv[])
 {
 
 	char* flag = argv[1];
-	char* numpoints = argv[2];
+	int numpoints = atoi(argv[2]);
 	char* numtrials = argv[3];
 	char* dimensions = argv[4];
-	
-	peanut butter jelly time
-	
-	What is up Will?
 
-	struct Node* array;
+	// Creates a list of Node pointers of size numpoints
+	struct node* vertices[numpoints];
 
-	Will addition
+	for(int i = 0; i < numpoints; i++) {
+		struct node* vertex = malloc( sizeof(struct node) );
+		vertex->name = i;
+		vertex->weight = 2;
+		vertex->searched = false;
 
- 	printf("%s, %s, %s, %s\n", flag, numpoints, numtrials, dimensions);
+		printf("name is: %f\n", vertex->weight);
+	}
 
-  return 0;
+ 	printf("%s, %i, %s, %s\n", flag, numpoints, numtrials, dimensions);
+
+	return 0;
 }
