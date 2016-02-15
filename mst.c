@@ -18,6 +18,8 @@ int main(int argc, char *argv[])
 	char* numpoints = argv[2];
 	char* numtrials = argv[3];
 	char* dimensions = argv[4];
+	
+	peanut butter jelly time
 
 	struct Node* array;
 
