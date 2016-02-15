@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 
 	// Creates a list of Node pointers of size numpoints
 	struct node* vertices[numpoints];
-
+/*
 	for(int i = 0; i < numpoints; i++) {
 		struct node* vertex = malloc( sizeof(struct node) );
 		vertex->name = i;
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 		printf("name is: %f\n", vertex->weight);
 	}
 
- 	printf("%s, %i, %s, %s\n", flag, numpoints, numtrials, dimensions);
+ 	printf("%s, %i, %s, %s\n", flag, numpoints, numtrials, dimensions);*/
 
 	return 0;
 }
