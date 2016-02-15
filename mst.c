@@ -25,6 +25,8 @@ int main(int argc, char *argv[])
 
 	struct Node* array;
 
+	Will addition
+
  	printf("%s, %s, %s, %s\n", flag, numpoints, numtrials, dimensions);
 
   return 0;
