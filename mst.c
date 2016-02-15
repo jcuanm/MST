@@ -19,6 +19,8 @@ int main(int argc, char *argv[])
 	char* numtrials = argv[3];
 	char* dimensions = argv[4];
 
+	struct Node* array;
+
  	printf("%s, %s, %s, %s\n", flag, numpoints, numtrials, dimensions);
 
   return 0;
