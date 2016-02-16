@@ -33,10 +33,12 @@ int main(int argc, char *argv[])
 		vertex->weight = 2;
 		vertex->searched = false;
 		
+		//inserting the nodes into the array
 		vertices[i] = vertex;
 	}
 	
 	// Creates a linked list at each index
+	// The version of C on Cloud9 doesn't support variable declarations inside of the for loop
 	int k;
 	int l;
 	
@@ -48,6 +50,7 @@ int main(int argc, char *argv[])
 		for (l = k + 1; l<numpoints;l++){
 			struct node* new_vertex = malloc(sizeof(struct node));
 			new_vertex = vertices[l];
+			// The commented line below is giving me issues. I'm trying to get new_vertex to point to the same thing that the node in the array is pointin to.
 			//new_vertex -> next = vertices[k];
 			vertices[k] -> next = new_vertex;
 		}
