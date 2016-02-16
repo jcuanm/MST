@@ -10,7 +10,7 @@ struct node {
 	int name;
 	float weight;
 	bool searched;
-	struct Node* next;
+	struct node* next;
 };
  
 int main(int argc, char *argv[])
@@ -41,16 +41,16 @@ int main(int argc, char *argv[])
 	int l;
 	
 	for(k = 0; k<numpoints; k++){
-		vertices[k] -> next = NULL;
-		struct node* head = malloc(sizeof(struct node));
-		struct node* head -> next = NULL;
-		
+		struct node* tail = malloc(sizeof(struct node));
+		tail -> next = NULL;
+		vertices[k] -> next = tail;
 
-		/*
 		for (l = k + 1; l<numpoints;l++){
-			new_vertex = vertices[l]; 
-			
-		}*/
+			struct node* new_vertex = malloc(sizeof(struct node));
+			new_vertex = vertices[l];
+			//new_vertex -> next = vertices[k];
+			vertices[k] -> next = new_vertex;
+		}
 	}
 	
 	
