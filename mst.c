@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
 	struct node* vertices[numpoints];
 	
 	int i;
+<<<<<<< HEAD
 
 	for(i= 0; i < numpoints; i++) {
 		
@@ -62,6 +63,24 @@ int main(int argc, char *argv[])
 	for (j = 0; j < numpoints; j++){
 		printf("name is: %f\n", vertices[j]->weight);
 	}
+=======
+
+	for(i= 0; i < numpoints; i++) {
+		
+		struct node* vertex = malloc( sizeof(struct node) );
+		vertex->name = i;
+		vertex->weight = 2;
+		vertex->searched = false;
+
+		printf("name is: %f\n", vertex->weight);
+	}
+	
+
+	
+	
+
+ 	printf("%s, %i, %s, %s\n", flag, numpoints, numtrials, dimensions);
+>>>>>>> master
 
 	return 0;
 }
