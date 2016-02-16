@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 	struct node* vertices[numpoints];
 	
 	int i;
-<<<<<<< HEAD
+
 
 	for(i= 0; i < numpoints; i++) {
 		
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 	for (j = 0; j < numpoints; j++){
 		printf("name is: %f\n", vertices[j]->weight);
 	}
-=======
+
 
 	for(i= 0; i < numpoints; i++) {
 		
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 	
 
  	printf("%s, %i, %s, %s\n", flag, numpoints, numtrials, dimensions);
->>>>>>> master
+
 
 	return 0;
 }
