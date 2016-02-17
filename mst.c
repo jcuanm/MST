@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 	struct node* last_edge;
 	
 	for(k = 0; k<numpoints; k++){
-		printf("%i:", k);
+		printf("%i:",vertices[k]->name);
 		for (l = k + 1; l<numpoints;l++){
 			struct node* new_edge = malloc(sizeof(struct node));
 			new_edge -> name = l;
@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 			new_edge -> weight = 2;
 			new_edge -> searched = false;
 			new_edge -> next = NULL;
-			printf("%i",l);
+			printf("%i",new_edge -> name);
 			
 			if (l == 1){
 				vertices[k] -> next = new_edge;
