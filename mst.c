@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
 	char* numtrials = argv[3];
 	char* dimensions = argv[4];
 
-	// Creates a list of Node pointers of size numpoints
+	// Creates a list of node pointers of size numpoints
 	struct node* vertices[numpoints];
 	
 	int i;
@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
 	}
 	
 	// Creates a linked list at each index
-	// The version of C on Cloud9 doesn't support variable declarations inside of the for loop
+	// This version of C on Cloud9 doesn't support variable declarations inside of the for loop
 
 	int k;
 	int l;
@@ -185,6 +185,7 @@ int main(int argc, char *argv[])
 
 		for (l = k + 1; l < numpoints; l++) {
 
+			// Creates a new node
 			struct node* new_edge = malloc( sizeof(struct node) );
 			
 			new_edge -> name = l;
@@ -194,6 +195,7 @@ int main(int argc, char *argv[])
 
 			printf("%i -> %f, ", new_edge -> name, new_edge -> weight);
 			
+			// Process of adding the new node to the appropriate position in the linked list
 			if (l == (k + 1)) {
 				vertices[k] -> next = new_edge;
 				last_edge = new_edge;
