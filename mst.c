@@ -12,6 +12,18 @@ struct node {
 	bool searched;
 	struct node* next;
 };
+
+int length(struct node* head) {
+	struct node* pointer = head;
+	int counter = 0;
+
+	while(pointer->next != NULL) {
+		counter++;
+		pointer = pointer->next;
+	}
+
+	return counter;
+}
  
 int main(int argc, char *argv[])
 {
@@ -30,7 +42,7 @@ int main(int argc, char *argv[])
 		
 		struct node* vertex = malloc( sizeof(struct node) );
 		vertex->name = i;
-		vertex->weight = 2;
+		vertex->weight = 0;
 		vertex->searched = false;
 		vertex -> next = NULL;
 		
@@ -44,30 +56,34 @@ int main(int argc, char *argv[])
 	int l;
 	struct node* last_edge;
 	
-	for(k = 0; k<numpoints; k++){
-		
-		printf("%i:",vertices[k]->name);
-		
-		for (l = k + 1; l<numpoints;l++){
-			struct node* new_edge = malloc(sizeof(struct node));
+	for(k = 0; k < numpoints; k++) {
+
+		printf("%i:", vertices[k] -> name);
+
+		for (l = k + 1; l < numpoints; l++) {
+
+			struct node* new_edge = malloc( sizeof(struct node) );
+			
 			new_edge -> name = l;
-			//TODO: CHANGE WEIGHT
-			new_edge -> weight = 2;
+			new_edge -> weight = 2;					//TODO: CHANGE WEIGHT
 			new_edge -> searched = false;
 			new_edge -> next = NULL;
-			printf("%i",new_edge -> name);
+
+			printf("%i, ", new_edge -> name);
 			
-			if (l == 1){
+			if (l == (k + 1)) {
 				vertices[k] -> next = new_edge;
-				struct node* last_edge = new_edge;
+				last_edge = new_edge;
 			}
-			else{
+			else {
 				last_edge -> next = new_edge;
 				last_edge = new_edge;
 			}
 		}
 		printf("\n");
 	}
+
+	printf("%i\n", length(vertices[0]));
 	
 	/*
 	int j;
