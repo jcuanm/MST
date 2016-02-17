@@ -25,14 +25,14 @@ int main(int argc, char *argv[])
 	struct node* vertices[numpoints];
 	
 	int i;
-
-
+	
 	for(i= 0; i < numpoints; i++) {
 		
 		struct node* vertex = malloc( sizeof(struct node) );
 		vertex->name = i;
 		vertex->weight = 2;
 		vertex->searched = false;
+		vertex -> next = NULL;
 		
 		//inserting the nodes into the array
 		vertices[i] = vertex;
@@ -42,40 +42,39 @@ int main(int argc, char *argv[])
 	// The version of C on Cloud9 doesn't support variable declarations inside of the for loop
 	int k;
 	int l;
+	struct node* last_edge;
 	
 	for(k = 0; k<numpoints; k++){
-		struct node* tail = malloc(sizeof(struct node));
-		tail -> next = NULL;
-		vertices[k] -> next = tail;
-
+		printf("%i:", k);
 		for (l = k + 1; l<numpoints;l++){
-			struct node* new_vertex = malloc(sizeof(struct node));
-			new_vertex = vertices[l];
-			// The commented line below is giving me issues. I'm trying to get new_vertex to point to the same thing that the node in the array is pointin to.
-			//new_vertex -> next = vertices[k];
-			vertices[k] -> next = new_vertex;
+			struct node* new_edge = malloc(sizeof(struct node));
+			new_edge -> name = l;
+			//TODO: CHANGE WEIGHT
+			new_edge -> weight = 2;
+			new_edge -> searched = false;
+			new_edge -> next = NULL;
+			printf("%i",l);
+			
+			if (l == 1){
+				vertices[k] -> next = new_edge;
+				struct node* last_edge = new_edge;
+			}
+			else{
+				last_edge -> next = new_edge;
+				last_edge = new_edge;
+			}
 		}
+		printf("\n");
 	}
 	
-	
+	/*
 	int j;
 	
 	for (j = 0; j < numpoints; j++){
 		printf("name is: %f\n", vertices[j]->weight);
 	}
 
-
-	for(i= 0; i < numpoints; i++) {
-		
-		struct node* vertex = malloc( sizeof(struct node) );
-		vertex->name = i;
-		vertex->weight = 2;
-		vertex->searched = false;
-
-		printf("name is: %f\n", vertex->weight);
-	}
-
- 	printf("%s, %i, %s, %s\n", flag, numpoints, numtrials, dimensions);
+ 	printf("%s, %i, %s, %s\n", flag, numpoints, numtrials, dimensions);*/
 
 
 	return 0;
