@@ -13,6 +13,7 @@ struct node {
 	struct node* next;
 };
 
+// Returns the length of a linked list
 int length(struct node* head) {
 	struct node* pointer = head;
 	int counter = 0;
@@ -33,7 +34,7 @@ int main(int argc, char *argv[])
 	char* numtrials = argv[3];
 	char* dimensions = argv[4];
 
-	// Creates a list of Node pointers of size numpoints
+	// Creates a list of node pointers of size numpoints
 	struct node* vertices[numpoints];
 	
 	int i;
@@ -51,7 +52,7 @@ int main(int argc, char *argv[])
 	}
 	
 	// Creates a linked list at each index
-	// The version of C on Cloud9 doesn't support variable declarations inside of the for loop
+	// This version of C on Cloud9 doesn't support variable declarations inside of the for loop
 
 	int k;
 	int l;
@@ -63,6 +64,7 @@ int main(int argc, char *argv[])
 
 		for (l = k + 1; l < numpoints; l++) {
 
+			// Creates a new node
 			struct node* new_edge = malloc( sizeof(struct node) );
 			
 			new_edge -> name = l;
@@ -72,6 +74,7 @@ int main(int argc, char *argv[])
 
 			printf("%i -> %f, ", new_edge -> name, new_edge -> weight);
 			
+			// Process of adding the new node to the appropriate position in the linked list
 			if (l == (k + 1)) {
 				vertices[k] -> next = new_edge;
 				last_edge = new_edge;
@@ -85,18 +88,6 @@ int main(int argc, char *argv[])
 	}
 
 	printf("%i\n", length(vertices[0]));
-<<<<<<< HEAD
-	
-	/*
-	int j;
-	
-	for (j = 0; j < numpoints; j++){
-		printf("name is: %f\n", vertices[j]->weight);
-	}
-
- 	printf("%s, %i, %s, %s\n", flag, numpoints, numtrials, dimensions);*/
-=======
->>>>>>> 9d32b8d7208bade4370eb929b494927f94033552
 
 	return 0;
 }
