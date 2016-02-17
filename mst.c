@@ -45,7 +45,9 @@ int main(int argc, char *argv[])
 	struct node* last_edge;
 	
 	for(k = 0; k<numpoints; k++){
+		
 		printf("%i:",vertices[k]->name);
+		
 		for (l = k + 1; l<numpoints;l++){
 			struct node* new_edge = malloc(sizeof(struct node));
 			new_edge -> name = l;
@@ -75,7 +77,6 @@ int main(int argc, char *argv[])
 	}
 
  	printf("%s, %i, %s, %s\n", flag, numpoints, numtrials, dimensions);*/
-
 
 	return 0;
 }
