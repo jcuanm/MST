@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
 	
 	// Creates a linked list at each index
 	// The version of C on Cloud9 doesn't support variable declarations inside of the for loop
+
 	int k;
 	int l;
 	struct node* last_edge;
@@ -65,11 +66,11 @@ int main(int argc, char *argv[])
 			struct node* new_edge = malloc( sizeof(struct node) );
 			
 			new_edge -> name = l;
-			new_edge -> weight = 2;					//TODO: CHANGE WEIGHT
+			new_edge -> weight = ((double) rand() / (RAND_MAX));					
 			new_edge -> searched = false;
 			new_edge -> next = NULL;
 
-			printf("%i, ", new_edge -> name);
+			printf("%i -> %f, ", new_edge -> name, new_edge -> weight);
 			
 			if (l == (k + 1)) {
 				vertices[k] -> next = new_edge;
@@ -84,16 +85,6 @@ int main(int argc, char *argv[])
 	}
 
 	printf("%i\n", length(vertices[0]));
-	
-	/*
-	int j;
-	
-	for (j = 0; j < numpoints; j++){
-		printf("name is: %f\n", vertices[j]->weight);
-	}
-
- 	printf("%s, %i, %s, %s\n", flag, numpoints, numtrials, dimensions);*/
-
 
 	return 0;
 }
