@@ -125,7 +125,7 @@ void printList(struct node *node)
 {
   while(node!=NULL)
   {
-   printf("%f ", node->weight);
+   printf("(%i -> %f)", node->name, node->weight);
    node = node->next;
   }
 }
@@ -181,8 +181,6 @@ int main(int argc, char *argv[])
 	
 	for(k = 0; k < numpoints; k++) {
 
-		printf("%i:", vertices[k] -> name);
-
 		for (l = k + 1; l < numpoints; l++) {
 
 			// Creates a new node
@@ -192,8 +190,6 @@ int main(int argc, char *argv[])
 			new_edge -> weight = ((double) rand() / (RAND_MAX));					
 			new_edge -> searched = false;
 			new_edge -> next = NULL;
-
-			printf("%i -> %f, ", new_edge -> name, new_edge -> weight);
 			
 			// Process of adding the new node to the appropriate position in the linked list
 			if (l == (k + 1)) {
@@ -207,11 +203,13 @@ int main(int argc, char *argv[])
 		}
 		printf("\n");
 	}
-
-	struct node** pointer = &vertices[0];
-
-	MergeSort(pointer);
-	listLength(vertices[0]);
+	
+  for(k=0; k < numpoints; k++) {
+    struct node** pointer = &vertices[k];
+    MergeSort(pointer);
+    printList(vertices[k]);
+    printf("\n");
+  }
 
 	return 0;
 }
