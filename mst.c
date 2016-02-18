@@ -131,7 +131,7 @@ void printList(struct node *node)
 }
  
 /* Function to insert a node at the beginging of the linked list */
-void push(struct node** head_ref, int new_weight)
+void push(struct node** head_ref, int new_weight, int name)
 {
   /* allocate node */
   struct node* new_node =
@@ -139,6 +139,7 @@ void push(struct node** head_ref, int new_weight)
   
   /* put in the weight  */
   new_node->weight  = new_weight;
+  new_node->name = name;
   
   /* link the old list off the new node */
   new_node->next = (*head_ref);    
@@ -146,6 +147,61 @@ void push(struct node** head_ref, int new_weight)
   /* move the head to point to the new node */
   (*head_ref)    = new_node;
 } 
+
+float find(struct node* queue, struct node* graph[], int numpoints, int name) {
+
+  struct node* pointer = graph[name];
+  float result = 2.0;
+
+  while(pointer != NULL) {
+
+    if(pointer->searched == false) {
+      pointer->searched = true;
+      result = pointer->weight;
+    }
+    else {
+      pointer = pointer->next;
+    }
+  }
+
+  if(result == 2.0){
+    struct node* q_pointer = queue;
+
+    while (q_pointer != NULL){
+      if (q_pointer -> queue -> name == name)
+    }
+  }
+  return result;
+}
+
+float prim(struct node* graph[], int numpoints) {
+  float weight = 0.0;
+  float leastWeightEdge = 2.0;
+  int newVertex;
+
+  struct node* firstVertex = (struct node*) malloc(sizeof(struct node));
+  firstVertex->name = graph[0]->name;
+  firstVertex->weight = graph[0]->weight;
+  firstVertex->next = NULL;
+
+  struct node* queue = firstVertex;
+  struct node* pointer = queue;
+
+  while(pointer != NULL) {
+
+    //Find next edge
+    if(find() < leastWeightEdge) {
+      leastWeightEdge = pointer->next->weight;
+      pointer = pointer->next;
+    }
+    else {
+      pointer = pointer->next;
+    }
+  }
+
+  weight += leastWeightEdge;
+  return weight;
+}
  
 int main(int argc, char *argv[])
 {
@@ -201,7 +257,6 @@ int main(int argc, char *argv[])
 				last_edge = new_edge;
 			}
 		}
-		printf("\n");
 	}
 	
   for(k=0; k < numpoints; k++) {
@@ -210,6 +265,8 @@ int main(int argc, char *argv[])
     printList(vertices[k]);
     printf("\n");
   }
+
+  printf("%f \n", prim(vertices, numpoints));
 
 	return 0;
 }
