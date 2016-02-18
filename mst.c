@@ -125,7 +125,7 @@ void printList(struct node *node)
 {
   while(node!=NULL)
   {
-   printf("(%i -> %f)", node->name, node->weight);
+   printf("(%i -> %f -> %i)", node->name, node->weight, node->searched);
    node = node->next;
   }
 }
@@ -151,13 +151,20 @@ void push(struct node** head_ref, int new_weight, int name)
 float find(struct node* queue, struct node* graph[], int numpoints, int name) {
 
   struct node* pointer = graph[name];
-  float result = 2.0;
+  float *result;
+  result = malloc( sizeof(float) );
+  *result = 2.0;
 
-  while(pointer != NULL) {
+  while(pointer->next != NULL) {
+
+    printf("%i %i\n", pointer->name, pointer->searched);
+    pointer = pointer->next;
 
     if(pointer->searched == false) {
       pointer->searched = true;
-      result = pointer->weight;
+      printf("%f %f\n", pointer->weight, *result);
+      //TODO: set result = pointer->weight
+      break;
     }
     else {
       pointer = pointer->next;
@@ -165,22 +172,29 @@ float find(struct node* queue, struct node* graph[], int numpoints, int name) {
   }
 
   //DELETION of a node from the queue
-  if(result == 2.0){
-    struct node* q_pointer = queue -> next;
+  if(*result == 2.0) {
+    struct node* curPointer = queue->next; // WHY? queue -> next;
+    struct node* prevPointer = queue;
 
-    while (q_pointer != NULL){
+    if(prevPointer -> name == name) {
+      queue = queue -> next;
+    }
+    else {
+      while (curPointer != NULL){
       
-      if (q_pointer -> name != name){
-        q_pointer = q_pointer -> next; 
-      }
-      else{
-        q_pointer -> next = q_pointer -> next -> next;
-        q_pointer -> next -> next = NULL;
-        // And then we have to free the malloc stuff or something
+        if (curPointer -> next -> name == name) {
+          prevPointer -> next = curPointer -> next;
+          free(curPointer);
+        }
+        else {
+          prevPointer = curPointer;
+          curPointer = curPointer -> next; 
+        }
       }
     }
   }
-  return result;
+
+  return *result;
 }
 
 float prim(struct node* graph[], int numpoints) {
@@ -199,7 +213,7 @@ float prim(struct node* graph[], int numpoints) {
   while(pointer != NULL) {
 
     //Find next edge
-    if(find() < leastWeightEdge) {
+    if(find(queue, graph, numpoints, pointer->name) < leastWeightEdge) {
       leastWeightEdge = pointer->next->weight;
       pointer = pointer->next;
     }
