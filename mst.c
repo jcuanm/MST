@@ -164,11 +164,20 @@ float find(struct node* queue, struct node* graph[], int numpoints, int name) {
     }
   }
 
+  //DELETION of a node from the queue
   if(result == 2.0){
-    struct node* q_pointer = queue;
+    struct node* q_pointer = queue -> next;
 
     while (q_pointer != NULL){
-      if (q_pointer -> queue -> name == name)
+      
+      if (q_pointer -> name != name){
+        q_pointer = q_pointer -> next; 
+      }
+      else{
+        q_pointer -> next = q_pointer -> next -> next;
+        q_pointer -> next -> next = NULL;
+        // And then we have to free the malloc stuff or something
+      }
     }
   }
   return result;
