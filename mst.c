@@ -27,8 +27,7 @@ int listLength(struct node* head) {
 }
 
 struct node* SortedMerge(struct node* a, struct node* b);
-void FrontBackSplit(struct node* source,
-          struct node** frontRef, struct node** backRef);
+void FrontBackSplit(struct node* source, struct node** frontRef, struct node** backRef);
 
 /* sorts the linked list by changing next pointers (not weight) */
 void MergeSort(struct node** headRef)
@@ -148,22 +147,30 @@ void push(struct node** head_ref, int new_weight, int name)
   (*head_ref)    = new_node;
 } 
 
+void markSearched(struct node* vertex, float weight) {
+  struct node* pointer = vertex;
+
+  while(pointer != NULL) {
+    if(pointer->weight == weight) {
+
+      pointer->searched = true;
+      break;
+    }
+    else {
+      pointer = pointer->next;
+    }
+  }
+}
+
 float find(struct node* queue, struct node* graph[], int numpoints, int name) {
 
   struct node* pointer = graph[name];
-  float *result;
-  result = malloc( sizeof(float) );
-  *result = 2.0;
+  float result = 2.0;
 
   while(pointer->next != NULL) {
 
-    printf("%i %i\n", pointer->name, pointer->searched);
-    pointer = pointer->next;
-
     if(pointer->searched == false) {
-      pointer->searched = true;
-      printf("%f %f\n", pointer->weight, *result);
-      //TODO: set result = pointer->weight
+      result = pointer->weight;
       break;
     }
     else {
@@ -172,17 +179,18 @@ float find(struct node* queue, struct node* graph[], int numpoints, int name) {
   }
 
   //DELETION of a node from the queue
-  if(*result == 2.0) {
-    struct node* curPointer = queue->next; // WHY? queue -> next;
+  if(result == 2.0) {
+    struct node* curPointer = queue->next;
     struct node* prevPointer = queue;
 
     if(prevPointer -> name == name) {
       queue = queue -> next;
+      free(prevPointer);
     }
     else {
-      while (curPointer != NULL){
+      while (curPointer != NULL) {
       
-        if (curPointer -> next -> name == name) {
+        if (curPointer -> name == name) {
           prevPointer -> next = curPointer -> next;
           free(curPointer);
         }
@@ -193,14 +201,15 @@ float find(struct node* queue, struct node* graph[], int numpoints, int name) {
       }
     }
   }
-
-  return *result;
+  return result;
 }
 
 float prim(struct node* graph[], int numpoints) {
   float weight = 0.0;
   float leastWeightEdge = 2.0;
+  struct node* leastWeightVertex;
   int newVertex;
+  float result;
 
   struct node* firstVertex = (struct node*) malloc(sizeof(struct node));
   firstVertex->name = graph[0]->name;
@@ -213,16 +222,22 @@ float prim(struct node* graph[], int numpoints) {
   while(pointer != NULL) {
 
     //Find next edge
-    if(find(queue, graph, numpoints, pointer->name) < leastWeightEdge) {
-      leastWeightEdge = pointer->next->weight;
+    result = find(queue, graph, numpoints, pointer->name);
+
+    if(result < leastWeightEdge) {
+      leastWeightVertex = graph[pointer->name];
+      leastWeightEdge = result;
       pointer = pointer->next;
+
     }
     else {
       pointer = pointer->next;
     }
   }
 
+  markSearched(leastWeightVertex, leastWeightEdge);
   weight += leastWeightEdge;
+
   return weight;
 }
  
@@ -244,7 +259,7 @@ int main(int argc, char *argv[])
 		struct node* vertex = malloc( sizeof(struct node) );
 		vertex->name = i;
 		vertex->weight = 0;
-		vertex->searched = false;
+		vertex->searched = true;
 		vertex -> next = NULL;
 		
 		//inserting the nodes into the array
@@ -282,14 +297,15 @@ int main(int argc, char *argv[])
 		}
 	}
 	
+
+  printf("Final Weight: %f \n", prim(vertices, numpoints));
+
   for(k=0; k < numpoints; k++) {
     struct node** pointer = &vertices[k];
     MergeSort(pointer);
     printList(vertices[k]);
     printf("\n");
   }
-
-  printf("%f \n", prim(vertices, numpoints));
 
 	return 0;
 }
