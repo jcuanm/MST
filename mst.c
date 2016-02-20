@@ -190,6 +190,9 @@ struct intFloatTuple find(struct node* queue, struct node* graph[], int numpoint
         graph[pointer -> name] -> searched = true;
         pointer -> name = true;
       }
+      else{
+        pointer = pointer -> next;
+      }
         
         
         //result = pointer->weight;
