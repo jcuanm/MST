@@ -6,6 +6,11 @@ typedef int bool;
 	#define true 1
 	#define false 0
 
+struct intFloatTuple {
+  int intPart;
+  float floatPart;
+};
+
 struct node {
 	int name;
 	float weight;
@@ -157,7 +162,6 @@ void markSearched(struct node* vertex, float weight) {
 
   while(pointer != NULL) {
     if(pointer->weight == weight) {
-
       pointer->searched = true;
       break;
     }
@@ -167,15 +171,17 @@ void markSearched(struct node* vertex, float weight) {
   }
 }
 
-float find(struct node* queue, struct node* graph[], int numpoints, int name) {
+struct intFloatTuple find(struct node* queue, struct node* graph[], int numpoints, int name) {
 
   struct node* pointer = graph[name];
   float result = 2.0;
+  int edgeName;
 
   while(pointer->next != NULL) {
 
     if(pointer->searched == false) {
       result = pointer->weight;
+      edgeName = pointer->name;
       break;
     }
     else {
@@ -206,13 +212,17 @@ float find(struct node* queue, struct node* graph[], int numpoints, int name) {
       }
     }
   }
-  return result;
+  struct intFloatTuple returnValue;
+  returnValue.intPart = edgeName;
+  returnValue.floatPart = result;
+
+  return returnValue;
 }
 
 float prim(struct node* graph[], int numpoints) {
 
   int newVertex;
-  float result;
+  struct intFloatTuple result;
   float weight = 0.0;
   float leastWeightEdge = 2.0;
 
@@ -224,15 +234,17 @@ float prim(struct node* graph[], int numpoints) {
   struct node* queue = firstVertex;
   struct node* pointer = queue;
   struct node* leastWeightVertex;
+  int vertexName;
 
   while(pointer != NULL) {
 
     //Find next edge
     result = find(queue, graph, numpoints, pointer->name);
 
-    if(result < leastWeightEdge) {
-      leastWeightVertex = graph[pointer->name];
-      leastWeightEdge = result;
+    if(result.floatPart < leastWeightEdge) {
+      leastWeightVertex = graph[result.intPart];
+      vertexName = pointer->name;
+      leastWeightEdge = result.floatPart;
       pointer = pointer->next;
 
     }
@@ -246,10 +258,12 @@ float prim(struct node* graph[], int numpoints) {
   newQVertex->weight = 0.0;
   newQVertex->next = NULL;
 
-  markSearched(leastWeightVertex, leastWeightEdge);
+  markSearched(graph[vertexName], leastWeightEdge);
   enqueue(queue, newQVertex);
   weight += leastWeightEdge;
-  printf("%f\n", leastWeightEdge);
+
+  printf("Queue is: ");
+  printList(queue);
 
   return weight;
 }
@@ -308,6 +322,8 @@ int main(int argc, char *argv[]) {
 			}
 		}
 	}
+	
+  printf("Final Weight: %f \n", prim(vertices, numpoints));
 
   for(int k=0; k < numpoints; k++) {
     struct node** pointer = &vertices[k];
@@ -315,8 +331,6 @@ int main(int argc, char *argv[]) {
     printList(vertices[k]);
     printf("\n");
   }
-	
-  printf("Final Weight: %f \n", prim(vertices, numpoints));
 
 	return 0;
 }
