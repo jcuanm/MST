@@ -321,12 +321,24 @@ int main(int argc, char *argv[]) {
 		}
 	}
 	
+	// Takes care of base cases
+	if (numpoints == 2){
+	  struct node* base_pointer = vertices[0] -> next;
+	  float final_result = base_pointer -> weight;
+	  printf("%f", final_result);
+	  return final_result;
+	}
+	if (numpoints < 2){
+	  printf("0");
+	  return 0;
+	}
   printf("Final Weight: %f \n", prim(vertices, numpoints));
 
-  for(int k=0; k < numpoints; k++) {
-    struct node** pointer = &vertices[k];
+  int o;
+  for( o=0; o < numpoints; o++) {
+    struct node** pointer = &vertices[o];
     MergeSort(pointer);
-    printList(vertices[k]);
+    printList(vertices[o]);
     printf("\n");
   }
 
