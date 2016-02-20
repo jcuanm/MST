@@ -225,33 +225,31 @@ float prim(struct node* graph[], int numpoints) {
   struct node* pointer = queue;
   struct node* leastWeightVertex;
 
-  while(queue != NULL) {
-    while(pointer != NULL) {
+  while(pointer != NULL) {
 
-      //Find next edge
-      result = find(queue, graph, numpoints, pointer->name);
+    //Find next edge
+    result = find(queue, graph, numpoints, pointer->name);
 
-      if(result < leastWeightEdge) {
-        leastWeightVertex = graph[pointer->name];
-        leastWeightEdge = result;
-        pointer = pointer->next;
+    if(result < leastWeightEdge) {
+      leastWeightVertex = graph[pointer->name];
+      leastWeightEdge = result;
+      pointer = pointer->next;
 
-      }
-      else {
-        pointer = pointer->next;
-      }
     }
-
-    struct node* newQVertex = (struct node*) malloc(sizeof(struct node));
-    newQVertex->name = leastWeightVertex->name;
-    newQVertex->weight = 0.0;
-    newQVertex->next = NULL;
-
-    markSearched(leastWeightVertex, leastWeightEdge);
-    enqueue(queue, newQVertex);
-    weight += leastWeightEdge;
-    printf("%f\n", leastWeightEdge);
+    else {
+      pointer = pointer->next;
+    }
   }
+
+  struct node* newQVertex = (struct node*) malloc(sizeof(struct node));
+  newQVertex->name = leastWeightVertex->name;
+  newQVertex->weight = 0.0;
+  newQVertex->next = NULL;
+
+  markSearched(leastWeightVertex, leastWeightEdge);
+  enqueue(queue, newQVertex);
+  weight += leastWeightEdge;
+  printf("%f\n", leastWeightEdge);
 
   return weight;
 }
