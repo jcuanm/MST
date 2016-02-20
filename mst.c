@@ -177,7 +177,7 @@ struct intFloatTuple find(struct node* queue, struct node* graph[], int numpoint
   float result = 2.0;
   int edgeName = 7;
 
-  while(pointer->next != NULL) {
+  while(pointer != NULL) {
 
     if(pointer->searched == false) {
       result = pointer->weight;
@@ -246,6 +246,7 @@ float prim(struct node* graph[], int numpoints) {
       leastWeightVertex = graph[result.intPart];
       vertexName = pointer->name;
       leastWeightEdge = result.floatPart;
+      
       pointer = pointer->next;
 
     }
@@ -262,7 +263,10 @@ float prim(struct node* graph[], int numpoints) {
   enqueue(queue, newQVertex);
   weight += leastWeightEdge;
 
+  printf("Queue is: ");
   printList(queue);
+  printf("\n");
+
   return weight;
 }
  
@@ -332,12 +336,15 @@ int main(int argc, char *argv[]) {
 	  printf("0");
 	  return 0;
 	}
-  printf("Final Weight: %f \n", prim(vertices, numpoints));
 
-  int o;
-  for( o=0; o < numpoints; o++) {
+  for(int o = 0; o < numpoints; o++) {
     struct node** pointer = &vertices[o];
     MergeSort(pointer);
+  }
+
+  printf("Final Weight: %f \n", prim(vertices, numpoints));
+
+  for(int o = 0; o < numpoints; o++) {
     printList(vertices[o]);
     printf("\n");
   }
