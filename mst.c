@@ -175,7 +175,7 @@ struct intFloatTuple find(struct node* queue, struct node* graph[], int numpoint
 
   struct node* pointer = graph[name];
   float result = 2.0;
-  int edgeName;
+  int edgeName = 7;
 
   while(pointer->next != NULL) {
 
@@ -234,6 +234,7 @@ float prim(struct node* graph[], int numpoints) {
   struct node* queue = firstVertex;
   struct node* pointer = queue;
   struct node* leastWeightVertex;
+  struct node* newQVertex = (struct node*) malloc(sizeof(struct node));
   int vertexName;
 
   while(pointer != NULL) {
@@ -253,7 +254,6 @@ float prim(struct node* graph[], int numpoints) {
     }
   }
 
-  struct node* newQVertex = (struct node*) malloc(sizeof(struct node));
   newQVertex->name = leastWeightVertex->name;
   newQVertex->weight = 0.0;
   newQVertex->next = NULL;
@@ -262,9 +262,7 @@ float prim(struct node* graph[], int numpoints) {
   enqueue(queue, newQVertex);
   weight += leastWeightEdge;
 
-  printf("Queue is: ");
   printList(queue);
-
   return weight;
 }
  
