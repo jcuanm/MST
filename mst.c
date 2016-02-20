@@ -237,35 +237,40 @@ float prim(struct node* graph[], int numpoints) {
   struct node* newQVertex = (struct node*) malloc(sizeof(struct node));
   int vertexName;
 
-  while(pointer != NULL) {
+  for(int i = 0; i < 1; i++) {
+    leastWeightEdge = 2.0;
 
-    //Find next edge
-    result = find(queue, graph, numpoints, pointer->name);
+    while(pointer != NULL) {
 
-    if(result.floatPart < leastWeightEdge) {
-      leastWeightVertex = graph[result.intPart];
-      vertexName = pointer->name;
-      leastWeightEdge = result.floatPart;
-      
-      pointer = pointer->next;
+      //Find next edge
+      result = find(queue, graph, numpoints, pointer->name);
+      printf("Result intpart: %i floatpart: %f\n", result.intPart, result.floatPart);
 
+      if(result.floatPart < leastWeightEdge) {
+        leastWeightVertex = graph[result.intPart];
+        vertexName = pointer->name;
+        leastWeightEdge = result.floatPart;
+        
+        pointer = pointer->next;
+
+      }
+      else {
+        pointer = pointer->next;
+      }
     }
-    else {
-      pointer = pointer->next;
-    }
+
+    newQVertex->name = leastWeightVertex->name;
+    newQVertex->weight = 0.0;
+    newQVertex->next = NULL;
+
+    markSearched(graph[vertexName], leastWeightEdge);
+    enqueue(queue, newQVertex);
+    weight += leastWeightEdge;
+
+    printf("Queue is: ");
+    printList(queue);
+    printf("\n");
   }
-
-  newQVertex->name = leastWeightVertex->name;
-  newQVertex->weight = 0.0;
-  newQVertex->next = NULL;
-
-  markSearched(graph[vertexName], leastWeightEdge);
-  enqueue(queue, newQVertex);
-  weight += leastWeightEdge;
-
-  printf("Queue is: ");
-  printList(queue);
-  printf("\n");
 
   return weight;
 }
