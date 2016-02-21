@@ -287,7 +287,12 @@ int main(int argc, char *argv[]) {
     //create array of coordinates
     struct coordTuple array[numpoints];
 
-    if(dimensions == 2) {
+    if(dimensions == 0) {
+
+      //we'll take care of this in distance function
+      break;
+    }
+    else if(dimensions == 2) {
 
       for(int i = 0; i < numpoints; i++) {
         struct coordTuple coord;
@@ -348,9 +353,14 @@ int main(int argc, char *argv[]) {
   	// Creates a linked list at each index
   	struct node* last_edge;
   	
+    //For each vertex
   	for(int k = 0; k < numpoints; k++) {
+      struct coordTuple originCoord = array[k];
 
+      //for each edge
   		for (int l = k + 1; l < numpoints; l++) {
+
+        struct coordTuple destCoord = array[l];
 
   			// Creates a new node
   			struct node* new_edge = malloc( sizeof(struct node) );
