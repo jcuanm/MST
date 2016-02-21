@@ -264,94 +264,93 @@ float prim(struct node* graph[], int numpoints) {
  
 int main(int argc, char *argv[]) {
 
-  //start timing function
-  clock_t start = clock(), diff;
-
 	char* flag = argv[1];
 	int numpoints = atoi(argv[2]);
-	char* numtrials = argv[3];
+	int numtrials = atoi(argv[3]);
 	char* dimensions = argv[4];
 
-	// Creates a list of node pointers of size numpoints
-	struct node* vertices[numpoints];
-	
-  struct node* vertex = malloc( sizeof(struct node) );
-  vertex->name = 0;
-  vertex->weight = 0;
-  vertex->searched = true;
-  vertex -> next = NULL;
+  //run algorithm numtrials times
   
-  vertices[0] = vertex;
+  for(int trial = 1; trial <= numtrials; trial++) {
+    //start timing function
+    clock_t start = clock(), diff;
 
-	for(int i = 1; i < numpoints; i++) {
-		
-		struct node* vertex = malloc( sizeof(struct node) );
-		vertex->name = i;
-		vertex->weight = 0;
-		vertex->searched = false;
-		vertex -> next = NULL;
-		
-		//inserting the nodes into the array
-		vertices[i] = vertex;
-	}
-	
-	// Creates a linked list at each index
-	struct node* last_edge;
-	
-	for(int k = 0; k < numpoints; k++) {
+  	// Creates a list of node pointers of size numpoints
+  	struct node* vertices[numpoints];
+  	
+    struct node* vertex = malloc( sizeof(struct node) );
+    vertex->name = 0;
+    vertex->weight = 0;
+    vertex->searched = true;
+    vertex -> next = NULL;
+    
+    vertices[0] = vertex;
 
-		for (int l = k + 1; l < numpoints; l++) {
+  	for(int i = 1; i < numpoints; i++) {
+  		
+  		struct node* vertex = malloc( sizeof(struct node) );
+  		vertex->name = i;
+  		vertex->weight = 0;
+  		vertex->searched = false;
+  		vertex -> next = NULL;
+  		
+  		//inserting the nodes into the array
+  		vertices[i] = vertex;
+  	}
+  	
+  	// Creates a linked list at each index
+  	struct node* last_edge;
+  	
+  	for(int k = 0; k < numpoints; k++) {
 
-			// Creates a new node
-			struct node* new_edge = malloc( sizeof(struct node) );
-			
-			new_edge -> name = l;
-      //seed random number generator
-      srand(time(NULL));
-			new_edge -> weight = (float) rand() / (RAND_MAX);					
-			new_edge -> searched = false;
-			new_edge -> next = NULL;
-			
-			// Process of adding the new node to the appropriate position in the linked list
-			if (l == (k + 1)) {
-				vertices[k] -> next = new_edge;
-				last_edge = new_edge;
-			}
-			else {
-				last_edge -> next = new_edge;
-				last_edge = new_edge;
-			}
-		}
-	}
-	
-	// Takes care of base cases
-	if (numpoints == 2){
-	  struct node* base_pointer = vertices[0] -> next;
-	  float final_result = base_pointer -> weight;
-	  printf("%f", final_result);
-	  return final_result;
-	}
-	if (numpoints < 2){
-	  printf("0");
-	  return 0;
-	}
+  		for (int l = k + 1; l < numpoints; l++) {
 
-  for(int o = 0; o < numpoints; o++) {
-    struct node** pointer = &vertices[o];
-    MergeSort(pointer);
+  			// Creates a new node
+  			struct node* new_edge = malloc( sizeof(struct node) );
+  			
+  			new_edge -> name = l;
+        //seed random number generator
+        srand(time(NULL));
+  			new_edge -> weight = (float) rand() / (RAND_MAX);					
+  			new_edge -> searched = false;
+  			new_edge -> next = NULL;
+  			
+  			// Process of adding the new node to the appropriate position in the linked list
+  			if (l == (k + 1)) {
+  				vertices[k] -> next = new_edge;
+  				last_edge = new_edge;
+  			}
+  			else {
+  				last_edge -> next = new_edge;
+  				last_edge = new_edge;
+  			}
+  		}
+  	}
+  	
+  	// Takes care of base cases
+  	if (numpoints == 2){
+  	  struct node* base_pointer = vertices[0] -> next;
+  	  float final_result = base_pointer -> weight;
+  	  printf("%f", final_result);
+  	  return final_result;
+  	}
+  	if (numpoints < 2){
+  	  printf("0");
+  	  return 0;
+  	}
+
+    for(int o = 0; o < numpoints; o++) {
+      struct node** pointer = &vertices[o];
+      MergeSort(pointer);
+    }
+
+    float finalWeight = prim(vertices, numpoints);
+
+    //end timing function
+    diff = clock() - start;
+
+    printf("Trial %i Final Weight: %f \nTime taken: %lu ms \n", trial, finalWeight, (diff * 1000000 / CLOCKS_PER_SEC));
   }
-
-  float finalWeight = prim(vertices, numpoints);
-
-  // for(int o = 0; o < numpoints; o++) {
-  //   printList(vertices[o]);
-  //   printf("\n");
-  // }
-
-  //end timing function
-  diff = clock() - start;
-
-  printf("Final Weight: %f \nTime taken: %lu ms \n", finalWeight, (diff * 1000000 / CLOCKS_PER_SEC));
 
 	return 0;
 }
