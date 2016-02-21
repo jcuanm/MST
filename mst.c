@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 typedef int bool;
 	#define true 1
@@ -263,6 +264,9 @@ float prim(struct node* graph[], int numpoints) {
  
 int main(int argc, char *argv[]) {
 
+  //start timing function
+  clock_t start = clock(), diff;
+
 	char* flag = argv[1];
 	int numpoints = atoi(argv[2]);
 	char* numtrials = argv[3];
@@ -292,21 +296,19 @@ int main(int argc, char *argv[]) {
 	}
 	
 	// Creates a linked list at each index
-	// This version of C on Cloud9 doesn't support variable declarations inside of the for loop
-
-	int k;
-	int l;
 	struct node* last_edge;
 	
-	for(k = 0; k < numpoints; k++) {
+	for(int k = 0; k < numpoints; k++) {
 
-		for (l = k + 1; l < numpoints; l++) {
+		for (int l = k + 1; l < numpoints; l++) {
 
 			// Creates a new node
 			struct node* new_edge = malloc( sizeof(struct node) );
 			
 			new_edge -> name = l;
-			new_edge -> weight = ((double) rand() / (RAND_MAX));					
+      //seed random number generator
+      srand(time(NULL));
+			new_edge -> weight = (float) rand() / (RAND_MAX);					
 			new_edge -> searched = false;
 			new_edge -> next = NULL;
 			
@@ -346,7 +348,10 @@ int main(int argc, char *argv[]) {
   //   printf("\n");
   // }
 
-  printf("Final Weight: %f \n", finalWeight);
+  //end timing function
+  diff = clock() - start;
+
+  printf("Final Weight: %f \nTime taken: %lu ms \n", finalWeight, (diff * 1000000 / CLOCKS_PER_SEC));
 
 	return 0;
 }
