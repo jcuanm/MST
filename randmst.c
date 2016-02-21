@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include <time.h>
 
 typedef int bool;
@@ -165,6 +166,23 @@ void markSearched(struct node* graph[], struct node* vertex, float weight) {
   }
 }
 
+float distance(int dimensions, struct coordTuple originCoord, struct coordTuple destCoord) {
+  if(dimensions == 2) {
+    return sqrt(pow(originCoord.x - destCoord.x, 2) + pow(originCoord.y - destCoord.y, 2));
+  }
+  else if(dimensions == 3) {
+    return sqrt(pow(originCoord.x - destCoord.x, 2) + pow(originCoord.y - destCoord.y, 2) 
+      + pow(originCoord.z - destCoord.z, 2));
+  }
+  else if(dimensions == 4) {
+    return sqrt(pow(originCoord.x - destCoord.x, 2) + pow(originCoord.y - destCoord.y, 2) 
+      + pow(originCoord.z - destCoord.z, 2) + pow(originCoord.w - destCoord.w, 2));
+  }
+  else {
+    return 0.0;
+  }
+}
+
 struct intFloatTuple find(struct node* queue, struct node* graph[], int numpoints, int name) {
 
   struct node* pointer = graph[name];
@@ -288,9 +306,8 @@ int main(int argc, char *argv[]) {
     struct coordTuple array[numpoints];
 
     if(dimensions == 0) {
-
       //we'll take care of this in distance function
-      break;
+          
     }
     else if(dimensions == 2) {
 
@@ -366,7 +383,14 @@ int main(int argc, char *argv[]) {
   			struct node* new_edge = malloc( sizeof(struct node) );
   			
   			new_edge -> name = l;
-  			new_edge -> weight = (float) rand() / (RAND_MAX);					
+
+        if(dimensions != 0) {
+  			 new_edge -> weight = distance(dimensions, originCoord, destCoord);			
+        }
+        else {
+          new_edge -> weight = (float) rand() / RAND_MAX;
+        }
+
   			new_edge -> searched = false;
   			new_edge -> next = NULL;
   			
