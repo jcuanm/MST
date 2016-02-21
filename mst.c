@@ -180,9 +180,17 @@ struct intFloatTuple find(struct node* queue, struct node* graph[], int numpoint
   while(pointer != NULL) {
 
     if(pointer->searched == false) {
-      result = pointer->weight;
-      edgeName = pointer->name;
-      break;
+
+      //AND if the vertex isn't searched
+      if(graph[pointer->name]->searched == true) {
+        pointer = pointer->next;
+      }
+      else {
+        result = pointer->weight;
+        edgeName = pointer->name;
+        graph[pointer->name]->searched = true;
+        break;
+      }
     }
     else {
       pointer = pointer->next;
@@ -212,6 +220,7 @@ struct intFloatTuple find(struct node* queue, struct node* graph[], int numpoint
       }
     }
   }
+  
   struct intFloatTuple returnValue;
   returnValue.intPart = edgeName;
   returnValue.floatPart = result;
@@ -252,7 +261,6 @@ float prim(struct node* graph[], int numpoints) {
         leastWeightEdge = result.floatPart;
         
         pointer = pointer->next;
-
       }
       else {
         pointer = pointer->next;
@@ -266,6 +274,7 @@ float prim(struct node* graph[], int numpoints) {
     markSearched(graph[vertexName], leastWeightEdge);
     enqueue(queue, newQVertex);
     weight += leastWeightEdge;
+
 
     printf("Queue is: ");
     printList(queue);
@@ -292,7 +301,7 @@ int main(int argc, char *argv[]) {
 		struct node* vertex = malloc( sizeof(struct node) );
 		vertex->name = i;
 		vertex->weight = 0;
-		vertex->searched = true;
+		vertex->searched = false;
 		vertex -> next = NULL;
 		
 		//inserting the nodes into the array
