@@ -463,7 +463,7 @@ int main(int argc, char *argv[]) {
     //end timing function
     diff = clock() - start;
 
-    printf("Trial %i Final Weight: %f \nTime taken: %lu ms \n", trial, finalWeight, (diff * 1000 / CLOCKS_PER_SEC));
+    printf("Trial %i Final Weight: %f \nTime taken: %lu min \n", trial, finalWeight, (diff / CLOCKS_PER_SEC)/60);
     
     averageTime += (diff * 1000 / CLOCKS_PER_SEC);
     averageWeight += finalWeight;
