@@ -4,15 +4,18 @@
 #include <math.h>
 #include <time.h>
 
+//Define Boolean type
 typedef int bool;
 	#define true 1
 	#define false 0
 
+//Special data structure specifically for our find function
 struct intFloatTuple {
   int intPart;
   float floatPart;
 };
 
+//Struct to handle coordinates in up to four dimensions
 struct coordTuple {
   float x;
   float y;
@@ -20,6 +23,7 @@ struct coordTuple {
   float w;
 };
 
+//Nodes for linked lists
 struct node {
 	int name;
 	float weight;
@@ -27,11 +31,15 @@ struct node {
 	struct node* next;
 };
 
+//type templates for our Mergesort helper functions
 struct node* SortedMerge(struct node* a, struct node* b);
 
 void FrontBackSplit(struct node* source, struct node** frontRef, struct node** backRef);
 
-/* sorts the linked list by changing next pointers (not weight) */
+// In order to optimize our algorithm, we use MergeSort on linked lists to 
+// ensure that the minimum weight edges from any vertex will simply be the 
+// first valid node that we encounter
+
 void MergeSort(struct node** headRef)
 {
   struct node* head = *headRef;
@@ -55,8 +63,9 @@ void MergeSort(struct node** headRef)
   *headRef = SortedMerge(a, b);
 }
  
-/* See http://geeksforgeeks.org/?p=3622 for details of this 
-   function */
+//Sorted merge takes two sorted linked lists a and b and 
+//turns them into a single sorted list
+
 struct node* SortedMerge(struct node* a, struct node* b)
 {
   struct node* result = NULL;
@@ -81,47 +90,41 @@ struct node* SortedMerge(struct node* a, struct node* b)
   return(result);
 }
  
-/* UTILITY FUNCTIONS */
-/* Split the nodes of the given list into front and back halves,
-     and return the two lists using the reference parameters.
-     If the length is odd, the extra node should go in the front list.
-     Uses the fast/slow pointer strategy.  */
-void FrontBackSplit(struct node* source,
-          struct node** frontRef, struct node** backRef)
-{
+//Split the nodes of the given list into front and back halves,
+//and return the two lists using the reference parameters.
+//If the length is odd, the extra node should go in the front list.
+
+void FrontBackSplit(struct node* source, struct node** frontRef, struct node** backRef) {
+  
   struct node* fast;
   struct node* slow;
-  if (source==NULL || source->next==NULL)
-  {
-    /* length < 2 cases */
+
+  if (source == NULL || source->next == NULL) {
     *frontRef = source;
     *backRef = NULL;
   }
-  else
-  {
+  else {
     slow = source;
     fast = source->next;
- 
-    /* Advance 'fast' two nodes, and advance 'slow' one node */
-    while (fast != NULL)
-    {
+
+    while (fast != NULL) {
       fast = fast->next;
-      if (fast != NULL)
-      {
+
+      if (fast != NULL) {
         slow = slow->next;
         fast = fast->next;
       }
     }
  
-    /* 'slow' is before the midpoint in the list, so split it in two
-      at that point. */
     *frontRef = source;
     *backRef = slow->next;
     slow->next = NULL;
   }
 }
  
-/* Function to print nodes in a given linked list */
+// Function to print nodes in a given linked list
+// Used to test correctness of our MST algorithm
+
 void printList(struct node *node)
 {
   while(node != NULL)
@@ -131,28 +134,26 @@ void printList(struct node *node)
   }
 }
  
-/* Function to insert a node at the beginging of the linked list */
-void push(struct node** head_ref, int new_weight, int name)
-{
-  /* allocate node */
+// Function to insert a node at the beginging of the linked list
+
+void push(struct node** head_ref, int new_weight, int name) {
   struct node* new_node = (struct node*) malloc(sizeof(struct node));
   
-  /* put in the weight  */
   new_node->weight = new_weight;
   new_node->name = name;
-  
-  /* link the old list off the new node */
   new_node->next = (*head_ref);    
   
-  /* move the head to point to the new node */
-  (*head_ref) = new_node;
+  *head_ref = new_node;
 } 
+
+//Takes in an edge weight and the head vertex, and marks the correct edge as searched
 
 void markSearched(struct node* graph[], struct node* vertex, float weight) {
   struct node* pointer = vertex;
 
   while(pointer != NULL) {
     if(pointer->weight == weight) {
+
       //Mark edge with weight in graph[vertex] searched
       pointer->searched = true;
 
@@ -165,6 +166,8 @@ void markSearched(struct node* graph[], struct node* vertex, float weight) {
     }
   }
 }
+
+//Calculates distances given two coordinate tuples in dimensions 0, 2, 3, or 4
 
 float distance(int dimensions, struct coordTuple originCoord, struct coordTuple destCoord) {
   if(dimensions == 2) {
@@ -183,11 +186,19 @@ float distance(int dimensions, struct coordTuple originCoord, struct coordTuple 
   }
 }
 
+// Given a vertex, find will return the first edge that has not been searched and does not lead
+// to another vertex that has already been searched. If all the edges out of the vertex have been
+// searched or lead to searched vertices, find() removes the vertex from the queue and returns an 
+// edge weight = 10.0 that is guaranteed not to be chosen as the global least weight edge 
+// (since the valid edge weights only lie between 0 and 1)
+
 struct intFloatTuple find(struct node* queue, struct node* graph[], int numpoints, int name) {
 
   struct node* pointer = graph[name];
-  float result = 2.0;
-  int edgeName = 7;
+
+  //Use these initial values as defaults
+  float result = 10.0;
+  int edgeName = 10;
 
   while(pointer != NULL) {
 
@@ -215,13 +226,11 @@ struct intFloatTuple find(struct node* queue, struct node* graph[], int numpoint
 
     if(prevPointer -> name == name) {
       queue = queue -> next;
-      //free(prevPointer);
     }
     else {
       while (curPointer != NULL) {
         if (curPointer -> name == name) {
           prevPointer -> next = curPointer -> next;
-          //free(curPointer);
 
           //return edge that will never be used
           break;
@@ -240,6 +249,11 @@ struct intFloatTuple find(struct node* queue, struct node* graph[], int numpoint
 
   return returnValue;
 }
+
+// prim() runs Prim's algorithm for finding MST given a graph
+// and the number of vertices. It accomplishes this with the use of helper
+// functions including find, markSearched, and push that have been previously
+// defined above.
 
 float prim(struct node* graph[], int numpoints) {
 
@@ -286,6 +300,14 @@ float prim(struct node* graph[], int numpoints) {
 
   return weight;
 }
+
+// In main, we accomplish a number of things including:
+// 1. Create an adjacency list representation of a complete graph 
+// 2. Runs Prims algorithm on the graph and prints the weight and time taken
+// 3. Repeats the above numtrials number of times
+// 4. Averages the times and weights of the trials
+// The result is that we print the time and weight for each trial as well
+// as the average for all trials
  
 int main(int argc, char *argv[]) {
 
@@ -294,20 +316,25 @@ int main(int argc, char *argv[]) {
 	int numtrials = atoi(argv[3]);
 	int dimensions = atoi(argv[4]);
 
-  //run algorithm numtrials times
   float averageWeight = 0.0;
   float averageTime = 0.0;
+  srand(time(NULL));
 
+  //run algorithm numtrials times
   for(int trial = 1; trial <= numtrials; trial++) {
+    
     //start timing function
     clock_t start = clock(), diff;
 
     //create array of coordinates
     struct coordTuple array[numpoints];
 
+    // Create coordinate tuples depending on the number
+    // of dimensions we're considering 
+
     if(dimensions == 0) {
-      //we'll take care of this in distance function
-          
+      // we'll take care of this in distance function by
+      // simply returning a random edge (no need for coordinates)
     }
     else if(dimensions == 2) {
 
@@ -345,6 +372,9 @@ int main(int argc, char *argv[]) {
     }
 
   	// Creates a list of node pointers of size numpoints
+    // each pointer in vertices[i] points to a list of all edges 
+    // from vertex i to all other vertices
+
   	struct node* vertices[numpoints];
   	
     struct node* vertex = malloc( sizeof(struct node) );
@@ -363,18 +393,20 @@ int main(int argc, char *argv[]) {
   		vertex->searched = false;
   		vertex -> next = NULL;
   		
-  		//inserting the nodes into the array
+  		// Insert the nodes into the array
   		vertices[i] = vertex;
   	}
   	
   	// Creates a linked list at each index
   	struct node* last_edge;
   	
-    //For each vertex
+    // For each vertex in the graph...
+
   	for(int k = 0; k < numpoints; k++) {
       struct coordTuple originCoord = array[k];
 
-      //for each edge
+      // For each edge in the graph...
+
   		for (int l = k + 1; l < numpoints; l++) {
 
         struct coordTuple destCoord = array[l];
@@ -395,6 +427,7 @@ int main(int argc, char *argv[]) {
   			new_edge -> next = NULL;
   			
   			// Process of adding the new node to the appropriate position in the linked list
+
   			if (l == (k + 1)) {
   				vertices[k] -> next = new_edge;
   				last_edge = new_edge;
@@ -406,14 +439,16 @@ int main(int argc, char *argv[]) {
   		}
   	}
   	
-  	// Takes care of base cases
+  	// Take care of base cases
   	if (numpoints == 2){
+
   	  struct node* base_pointer = vertices[0] -> next;
   	  float final_result = base_pointer -> weight;
   	  printf("%f", final_result);
+
   	  return final_result;
   	}
-  	if (numpoints < 2){
+    else if (numpoints < 2){
   	  printf("0");
   	  return 0;
   	}
