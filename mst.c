@@ -18,20 +18,8 @@ struct node {
 	struct node* next;
 };
 
-int listLength(struct node* head) {
-	struct node* pointer = head;
-	int counter = 0;
-
-	while(pointer->next != NULL) {
-		counter++;
-		pointer = pointer->next;
-		printf("%i\n", pointer->name);
-	}
-
-	return counter;
-}
-
 struct node* SortedMerge(struct node* a, struct node* b);
+
 void FrontBackSplit(struct node* source, struct node** frontRef, struct node** backRef);
 
 /* sorts the linked list by changing next pointers (not weight) */
@@ -127,42 +115,40 @@ void FrontBackSplit(struct node* source,
 /* Function to print nodes in a given linked list */
 void printList(struct node *node)
 {
-  while(node!=NULL)
+  while(node != NULL)
   {
    printf("(%i -> %f -> %i)", node->name, node->weight, node->searched);
    node = node->next;
   }
-}
-
-void enqueue(struct node* queue, struct node* vertex) {
-  vertex -> next = queue -> next;
-  queue -> next = vertex;
 }
  
 /* Function to insert a node at the beginging of the linked list */
 void push(struct node** head_ref, int new_weight, int name)
 {
   /* allocate node */
-  struct node* new_node =
-            (struct node*) malloc(sizeof(struct node));
+  struct node* new_node = (struct node*) malloc(sizeof(struct node));
   
   /* put in the weight  */
-  new_node->weight  = new_weight;
+  new_node->weight = new_weight;
   new_node->name = name;
   
   /* link the old list off the new node */
   new_node->next = (*head_ref);    
   
   /* move the head to point to the new node */
-  (*head_ref)    = new_node;
+  (*head_ref) = new_node;
 } 
 
-void markSearched(struct node* vertex, float weight) {
+void markSearched(struct node* graph[], struct node* vertex, float weight) {
   struct node* pointer = vertex;
 
   while(pointer != NULL) {
     if(pointer->weight == weight) {
+      //Mark edge with weight in graph[vertex] searched
       pointer->searched = true;
+
+      //Mark vertex in graph searched
+      graph[pointer->name]->searched = true;
       break;
     }
     else {
@@ -188,7 +174,6 @@ struct intFloatTuple find(struct node* queue, struct node* graph[], int numpoint
       else {
         result = pointer->weight;
         edgeName = pointer->name;
-        graph[pointer->name]->searched = true;
         break;
       }
     }
@@ -204,14 +189,16 @@ struct intFloatTuple find(struct node* queue, struct node* graph[], int numpoint
 
     if(prevPointer -> name == name) {
       queue = queue -> next;
-      free(prevPointer);
+      //free(prevPointer);
     }
     else {
       while (curPointer != NULL) {
-      
         if (curPointer -> name == name) {
           prevPointer -> next = curPointer -> next;
-          free(curPointer);
+          //free(curPointer);
+
+          //return edge that will never be used
+          break;
         }
         else {
           prevPointer = curPointer;
@@ -243,23 +230,21 @@ float prim(struct node* graph[], int numpoints) {
   struct node* queue = firstVertex;
   struct node* pointer = queue;
   struct node* leastWeightVertex;
-  struct node* newQVertex = (struct node*) malloc(sizeof(struct node));
   int vertexName;
 
-  for(int i = 0; i < 1; i++) {
+  for(int i = 0; i < (numpoints - 1); i++) {
     leastWeightEdge = 2.0;
+    pointer = queue;
 
     while(pointer != NULL) {
 
       //Find next edge
       result = find(queue, graph, numpoints, pointer->name);
-      printf("Result intpart: %i floatpart: %f\n", result.intPart, result.floatPart);
 
       if(result.floatPart < leastWeightEdge) {
         leastWeightVertex = graph[result.intPart];
-        vertexName = pointer->name;
         leastWeightEdge = result.floatPart;
-        
+        vertexName = pointer->name;
         pointer = pointer->next;
       }
       else {
@@ -267,18 +252,10 @@ float prim(struct node* graph[], int numpoints) {
       }
     }
 
-    newQVertex->name = leastWeightVertex->name;
-    newQVertex->weight = 0.0;
-    newQVertex->next = NULL;
+    markSearched(graph, graph[vertexName], leastWeightEdge);
 
-    markSearched(graph[vertexName], leastWeightEdge);
-    enqueue(queue, newQVertex);
+    push(&(queue), 0, leastWeightVertex->name);
     weight += leastWeightEdge;
-
-
-    printf("Queue is: ");
-    printList(queue);
-    printf("\n");
   }
 
   return weight;
@@ -293,10 +270,16 @@ int main(int argc, char *argv[]) {
 
 	// Creates a list of node pointers of size numpoints
 	struct node* vertices[numpoints];
-
-	int i;
 	
-	for(i= 0; i < numpoints; i++) {
+  struct node* vertex = malloc( sizeof(struct node) );
+  vertex->name = 0;
+  vertex->weight = 0;
+  vertex->searched = true;
+  vertex -> next = NULL;
+  
+  vertices[0] = vertex;
+
+	for(int i = 1; i < numpoints; i++) {
 		
 		struct node* vertex = malloc( sizeof(struct node) );
 		vertex->name = i;
@@ -356,12 +339,14 @@ int main(int argc, char *argv[]) {
     MergeSort(pointer);
   }
 
-  printf("Final Weight: %f \n", prim(vertices, numpoints));
+  float finalWeight = prim(vertices, numpoints);
 
-  for(int o = 0; o < numpoints; o++) {
-    printList(vertices[o]);
-    printf("\n");
-  }
+  // for(int o = 0; o < numpoints; o++) {
+  //   printList(vertices[o]);
+  //   printf("\n");
+  // }
+
+  printf("Final Weight: %f \n", finalWeight);
 
 	return 0;
 }
