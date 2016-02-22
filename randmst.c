@@ -273,6 +273,7 @@ float prim(struct node* graph[], int numpoints) {
   int vertexName;
 
   for(int i = 0; i < (numpoints - 1); i++) {
+    
     leastWeightEdge = 2.0;
     pointer = queue;
 
@@ -296,6 +297,8 @@ float prim(struct node* graph[], int numpoints) {
 
     push(&(queue), 0, leastWeightVertex->name);
     weight += leastWeightEdge;
+
+    printf("Prim's %f percent done\n", (float)(100 * i / numpoints));
   }
 
   return weight;
@@ -437,6 +440,8 @@ int main(int argc, char *argv[]) {
   				last_edge = new_edge;
   			}
   		}
+
+      printf("Setup %f percent done:\n", (float) (100 * k / numpoints));
   	}
   	
   	// Take care of base cases
@@ -456,6 +461,7 @@ int main(int argc, char *argv[]) {
     for(int o = 0; o < numpoints; o++) {
       struct node** pointer = &vertices[o];
       MergeSort(pointer);
+      printf("MergeSort %f percent done \n", (float) (100 * o / numpoints));
     }
 
     float finalWeight = prim(vertices, numpoints);
